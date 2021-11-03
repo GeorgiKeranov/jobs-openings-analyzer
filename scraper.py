@@ -6,18 +6,23 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 class Scraper:
+	selenium_elements = {}
+
 	def __init__(self, url):
 		self.url = url
 
 		self.setup_driver_options()
 		self.setup_driver()
 
+	# Automatically save cookies and close driver on destruction of the object
 	def __del__(self):
 		if hasattr(self, 'cookies_file_path'):	
 			self.save_cookies()
 
 		self.driver.close()
 
+	# Add these options in order to make chrome driver appear as a human instead of detecting it as a bot
+	# Also change the 'cdc_' string in the chromedriver.exe with Notepad++ for example with 'abc_' to prevent detecting it as a bot
 	def setup_driver_options(self):
 		self.driver_options = Options()
 
@@ -37,10 +42,12 @@ class Scraper:
 		for experimental_option in experimental_options:
 			self.driver_options.add_experimental_option(experimental_option['key'], experimental_option['value'])
 
+	# Setup chrome driver with predefined options
 	def setup_driver(self):
 		self.driver = webdriver.Chrome(options = self.driver_options)
 		self.driver.get(self.url)
 
+	# Add login functionality and load cookies if there are any with 'cookies_file_name'
 	def add_login_functionality(self, login_url, username_selector, password_selector, remember_checkbox_selector, login_button_selector, cookies_file_name):
 		self.login_url = login_url
 		self.username_selector = username_selector
@@ -51,33 +58,46 @@ class Scraper:
 
 		self.load_cookies()
 
+	# Load cookies from file
 	def load_cookies(self):
+		# If there is no file with cookies go to the login page and ask for credentials
 		if not os.path.isfile(self.cookies_file_path):
 			self.login()
 			return
 		
-		cookiesFile = open(self.cookies_file_path, 'rb')
-		cookies = pickle.load(cookiesFile)
+		# Load cookies from the given file name in 'add_login_functionality' function
+		cookies_file = open(self.cookies_file_path, 'rb')
+		cookies = pickle.load(cookies_file)
 		
 		for cookie in cookies:
 			self.driver.add_cookie(cookie)
 
-		cookiesFile.close()
+		cookies_file.close()
 
+		# Wait random time before refreshing the page to prevent the detection as a bot
 		self.wait_random_time()
+		# Refresh the site url with the loaded cookies so the user will be logged in
 		self.driver.get(self.url)
 
+
+	# Save cookies to file
 	def save_cookies(self):
-		cookiesFile = open(self.cookies_file_path, 'wb')
+		# Open or create cookies file with the given name from 'add_login_functionality'
+		cookies_file = open(self.cookies_file_path, 'wb')
+		
+		# Get current cookies from the driver
 		cookies = self.driver.get_cookies()
 
-		pickle.dump(cookies, cookiesFile)
+		# Save cookies in the cookie file as a byte stream
+		pickle.dump(cookies, cookies_file)
 
-		cookiesFile.close()
+		cookies_file.close()
 
+	# Go to login page and asks for credentials to log in the user then saves the cookies
 	def login(self):
 		self.wait_random_time()
 
+		# Go to login page
 		self.driver.get(self.login_url)
 
 		try:
@@ -91,13 +111,15 @@ class Scraper:
 			print('Some of the html elements is not found, please check the selectors in add_login_functionality()')
 			return
 
+		# Ask for username in the terminal for secure reasons
 		username = getpass.getpass('Username: ')
 		username_field.send_keys(username)
 		
+		# Ask for password in the terminal for secure reasons
 		password = getpass.getpass()
 		password_field.send_keys(password)
 		
-		if 'remember_checkbox' in locals():
+		if self.remember_checkbox_selecto:
 			self.wait_random_time()
 			remember_checkbox.click()
 
