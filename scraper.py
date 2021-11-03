@@ -74,10 +74,7 @@ class Scraper:
 
 		cookies_file.close()
 
-		# Wait random time before refreshing the page to prevent the detection as a bot
-		self.wait_random_time()
-		# Refresh the site url with the loaded cookies so the user will be logged in
-		self.driver.get(self.url)
+		self.go_to_page(self.url)
 
 
 	# Save cookies to file
@@ -95,10 +92,8 @@ class Scraper:
 
 	# Go to login page and asks for credentials to log in the user then saves the cookies
 	def login(self):
-		self.wait_random_time()
-
 		# Go to login page
-		self.driver.get(self.login_url)
+		self.go_to_page(self.login_url)
 
 		try:
 			username_field = self.driver.find_element_by_css_selector(self.username_selector)
@@ -139,3 +134,11 @@ class Scraper:
 		random_sleep_seconds = round(random.uniform(1.0, 4.0), 2)
 
 		time.sleep(random_sleep_seconds)
+
+	# Goes to a given page and waits random time before that to prevent detection as a bot
+	def go_to_page(self, page):
+		# Wait random time before refreshing the page to prevent the detection as a bot
+		self.wait_random_time()
+
+		# Refresh the site url with the loaded cookies so the user will be logged in
+		self.driver.get(page)
