@@ -1,13 +1,7 @@
 import time
 from scraper import Scraper
 from selenium.webdriver.common.keys import Keys
-from show_data_in_pie_chart import show_data_in_pie_chart
-
-def wait_random_seconds() {
-	random_sleep_seconds = round(random.uniform(1.0, 4.0), 2)
-
-	time.sleep()
-}
+from visualize_data import visualize_data
 
 def scrape_number_of_jobs_by_each_search_term(search_terms):
 	results_for_search_terms = []
@@ -86,4 +80,4 @@ results_for_search_terms = scrape_number_of_jobs_by_each_search_term(search_term
 print(search_terms)
 print(results_for_search_terms)
 
-show_data_in_pie_chart(results_for_search_terms, search_terms)
+visualize_data_in_pie_chart(results_for_search_terms, search_terms)
