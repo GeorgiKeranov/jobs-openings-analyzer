@@ -2,7 +2,7 @@ import time
 import urllib.parse
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-
+from visualize_data import visualize_data_in_pie_chart
 
 programming_technologies = [
 	"Spring Boot",
@@ -32,7 +32,7 @@ for tech in programming_technologies:
 
 	time.sleep(2)
 
-
 print(tech_jobs_count)
 print(programming_technologies)
 
+visualize_data_in_pie_chart(tech_jobs_count, programming_technologies)
