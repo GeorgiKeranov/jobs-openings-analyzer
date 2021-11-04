@@ -2,8 +2,13 @@ import os
 import pickle
 import time
 import getpass
+import random
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Scraper:
 	# Here we will save all references of the html elements that we have found
@@ -97,7 +102,8 @@ class Scraper:
 	# Go to login page and asks for credentials to log in the user then saves the cookies
 	def login(self):
 		# Go to login page
-		self.go_to_page(self.login_url)
+		if self.url is not self.login_url:
+			self.go_to_page(self.login_url)
 
 		# Ask for username in the terminal for secure reasons
 		username = getpass.getpass('Username: ')
@@ -110,11 +116,13 @@ class Scraper:
 		if self.remember_checkbox_selector:
 			self.element_click(self.remember_checkbox_selector)
 		
+		self.element_click(self.login_button_selector)
+
 		time.sleep(10)
 		self.save_cookies()
 
 	# Wait random amount of seconds before taking some action so the server won't be able to tell if you are a bot
-	def wait_random_time():
+	def wait_random_time(self):
 		random_sleep_seconds = round(random.uniform(1.00, 4.00), 2)
 
 		time.sleep(random_sleep_seconds)
@@ -134,9 +142,10 @@ class Scraper:
 
 		try:
 			# Wait for element to load for some time declared in 'find_element_delay'
-			element = WebDriverWait(driver, self.find_element_delay).until(EC.presence_of_element_located(By.CSS_SELECTOR, selector))
+			wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+			element = WebDriverWait(self.driver, self.find_element_delay).until(wait_until)
 		except TimeoutException:
-			print('ERROR: Timed out waiting for the element with css selector "{selector}" to load')
+			print(f'ERROR: Timed out waiting for the element with css selector "{selector}" to load')
 
 			# End the program execution because we cannot find the element
 			exit()
@@ -147,26 +156,26 @@ class Scraper:
 
 		return element
 
-	# Find element based on 'selector' variable and wait some random time before clicking it
+	# Wait random time before cliking on the element
 	def element_click(self, selector):
-		element = self.find_element(selector)
-
 		self.wait_random_time()
+
+		element = self.find_element(selector)
 
 		element.click()
 
-	# Find element based on 'selector' variable and wait some random time before typing the text in it
+	# Wait random time before sending the keys to the element
 	def element_send_keys(self, selector, text):
-		element = self.find_element(selector)
-
 		self.wait_random_time()
+
+		element = self.find_element(selector)
 
 		element.send_keys(text)
 
-	# Find element based on 'selector' variable and wait some random time before clearing the value from element
+	# Wait random time before clearing the element
 	def element_clear(self, selector):
-		element = self.find_element(selector)
-
 		self.wait_random_time()
+
+		element = self.find_element(selector)
 
 		element.clear()
