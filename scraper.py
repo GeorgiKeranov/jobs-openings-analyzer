@@ -6,7 +6,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 class Scraper:
+	# Here we will save all references of the html elements that we have found
 	selenium_elements = {}
+
+	# This delay is used when we are waiting for element to get loaded in the html
+	find_element_delay = 20
 
 	def __init__(self, url):
 		self.url = url
@@ -95,43 +99,23 @@ class Scraper:
 		# Go to login page
 		self.go_to_page(self.login_url)
 
-		try:
-			username_field = self.driver.find_element_by_css_selector(self.username_selector)
-			password_field = self.driver.find_element_by_css_selector(self.password_selector)
-			login_button = self.driver.find_element_by_css_selector(self.login_button_selector)
-
-			if self.remember_checkbox_selector:
-				remember_checkbox = self.driver.find_element_by_css_selector(self.remember_checkbox_selector)
-		except:
-			print('Some of the html elements is not found, please check the selectors in add_login_functionality()')
-			return
-
 		# Ask for username in the terminal for secure reasons
 		username = getpass.getpass('Username: ')
-		username_field.send_keys(username)
-		
 		# Ask for password in the terminal for secure reasons
 		password = getpass.getpass()
-		password_field.send_keys(password)
+
+		self.element_send_keys(self.username_selector, username)
+		self.element_send_keys(self.password_selector, password)
 		
-		if self.remember_checkbox_selecto:
-			self.wait_random_time()
-			remember_checkbox.click()
-
-		self.wait_random_time()
-		login_button.click()
-
-		self.wait_random_time()
+		if self.remember_checkbox_selector:
+			self.element_click(self.remember_checkbox_selector)
+		
+		time.sleep(10)
 		self.save_cookies()
 
-	def find_element(self, selector):
-		return self.driver.find_element_by_css_selector(selector)
-
-	def find_elements(self, selector):
-		return self.driver.find_elements_by_css_selector(selector)
-
+	# Wait random amount of seconds before taking some action so the server won't be able to tell if you are a bot
 	def wait_random_time():
-		random_sleep_seconds = round(random.uniform(1.0, 4.0), 2)
+		random_sleep_seconds = round(random.uniform(1.00, 4.00), 2)
 
 		time.sleep(random_sleep_seconds)
 
@@ -142,3 +126,47 @@ class Scraper:
 
 		# Refresh the site url with the loaded cookies so the user will be logged in
 		self.driver.get(page)
+
+	def find_element(self, selector):
+		# Check if we already have found this element and return the element
+		if selector in self.selenium_elements.keys():
+			return self.selenium_elements[selector]
+
+		try:
+			# Wait for element to load for some time declared in 'find_element_delay'
+			element = WebDriverWait(driver, self.find_element_delay).until(EC.presence_of_element_located(By.CSS_SELECTOR, selector))
+		except TimeoutException:
+			print('ERROR: Timed out waiting for the element with css selector "{selector}" to load')
+
+			# End the program execution because we cannot find the element
+			exit()
+		
+		# Add this element in the global dictionary so if we need it multiple times
+		# we will not have to search for it in the html
+		self.selenium_elements[selector] = element
+
+		return element
+
+	# Find element based on 'selector' variable and wait some random time before clicking it
+	def element_click(self, selector):
+		element = self.find_element(selector)
+
+		self.wait_random_time()
+
+		element.click()
+
+	# Find element based on 'selector' variable and wait some random time before typing the text in it
+	def element_send_keys(self, selector, text):
+		element = self.find_element(selector)
+
+		self.wait_random_time()
+
+		element.send_keys(text)
+
+	# Find element based on 'selector' variable and wait some random time before clearing the value from element
+	def element_clear(self, selector):
+		element = self.find_element(selector)
+
+		self.wait_random_time()
+
+		element.clear()
