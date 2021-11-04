@@ -57,15 +57,21 @@ class Scraper:
 		self.driver.get(self.url)
 
 	# Add login functionality and load cookies if there are any with 'cookies_file_name'
-	def add_login_functionality(self, login_url, username_selector, password_selector, remember_checkbox_selector, login_button_selector, cookies_file_name):
+	def add_login_functionality(self, login_url, username_selector, password_selector, remember_checkbox_selector, login_button_selector, is_logged_in_selector, cookies_file_name):
 		self.login_url = login_url
 		self.username_selector = username_selector
 		self.password_selector = password_selector
 		self.remember_checkbox_selector = remember_checkbox_selector
 		self.login_button_selector = login_button_selector
+		self.is_logged_in_selector = is_logged_in_selector
 		self.cookies_file_path = 'cookies_files/' + cookies_file_name + '.pkl'
 
 		self.load_cookies()
+
+		# If is_logged_in_selector is not found try to login the user again
+		if not self.find_element(is_logged_in_selector, False, 5):
+			self.login()
+
 
 	# Load cookies from file
 	def load_cookies(self):
@@ -85,6 +91,7 @@ class Scraper:
 
 		self.go_to_page(self.url)
 
+		time.sleep(5)
 
 	# Save cookies to file
 	def save_cookies(self):
@@ -100,25 +107,34 @@ class Scraper:
 		cookies_file.close()
 
 	# Go to login page and asks for credentials to log in the user then saves the cookies
-	def login(self):
+	def login(self, go_to_login_page = True):
 		# Go to login page
-		if self.url is not self.login_url:
+		if (self.url is not self.login_url) and go_to_login_page:
 			self.go_to_page(self.login_url)
 
 		# Ask for username in the terminal for secure reasons
 		username = getpass.getpass('Username: ')
+		self.element_clear(self.username_selector, False)
+		self.element_send_keys(self.username_selector, username, False)
+		
 		# Ask for password in the terminal for secure reasons
 		password = getpass.getpass()
-
-		self.element_send_keys(self.username_selector, username)
-		self.element_send_keys(self.password_selector, password)
+		self.element_clear(self.password_selector, False)
+		self.element_send_keys(self.password_selector, password, False)	
 		
 		if self.remember_checkbox_selector:
 			self.element_click(self.remember_checkbox_selector)
 		
 		self.element_click(self.login_button_selector)
 
-		time.sleep(10)
+		# Wait some time after clicking the login button
+		time.sleep(5)
+
+		# Login is not successful so call the function again
+		if not self.find_element(self.is_logged_in_selector, False, 5):
+			self.login(False)
+
+		# Login is successful so save the cookies
 		self.save_cookies()
 
 	# Wait random amount of seconds before taking some action so the server won't be able to tell if you are a bot
@@ -135,20 +151,30 @@ class Scraper:
 		# Refresh the site url with the loaded cookies so the user will be logged in
 		self.driver.get(page)
 
-	def find_element(self, selector):
+	def find_element(self, selector, exit_on_missing_element = True, custom_find_element_delay = False):
 		# Check if we already have found this element and return the element
 		if selector in self.selenium_elements.keys():
 			return self.selenium_elements[selector]
 
-		try:
-			# Wait for element to load for some time declared in 'find_element_delay'
-			wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-			element = WebDriverWait(self.driver, self.find_element_delay).until(wait_until)
-		except TimeoutException:
-			print(f'ERROR: Timed out waiting for the element with css selector "{selector}" to load')
+		# Initialize wait dealy
+		wait_delay = self.find_element_delay
+		if custom_find_element_delay:
+			wait_delay = custom_find_element_delay
 
-			# End the program execution because we cannot find the element
-			exit()
+		# Intialize the condition to wait
+		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+
+		try:
+			# Wait for element to load
+			element = WebDriverWait(self.driver, wait_delay).until(wait_until)
+		except TimeoutException:
+			if exit_on_missing_element:
+				print(f'ERROR: Timed out waiting for the element with css selector "{selector}" to load')
+				# End the program execution because we cannot find the element
+				exit()
+			else:
+				print(f'LOG: Timed out waiting for the element with css selector "{selector}" to load')
+				return False
 		
 		# Add this element in the global dictionary so if we need it multiple times
 		# we will not have to search for it in the html
@@ -157,24 +183,27 @@ class Scraper:
 		return element
 
 	# Wait random time before cliking on the element
-	def element_click(self, selector):
-		self.wait_random_time()
+	def element_click(self, selector, delay = True):
+		if delay:
+			self.wait_random_time()
 
 		element = self.find_element(selector)
 
 		element.click()
 
 	# Wait random time before sending the keys to the element
-	def element_send_keys(self, selector, text):
-		self.wait_random_time()
+	def element_send_keys(self, selector, text, delay = True):
+		if delay:
+			self.wait_random_time()
 
 		element = self.find_element(selector)
 
 		element.send_keys(text)
 
 	# Wait random time before clearing the element
-	def element_clear(self, selector):
-		self.wait_random_time()
+	def element_clear(self, selector, delay = True):
+		if delay:
+			self.wait_random_time()
 
 		element = self.find_element(selector)
 

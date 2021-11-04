@@ -18,7 +18,7 @@ jobs_found_results = []
 # Initialize the scraper for linkedin
 scraper = Scraper('https://www.linkedin.com')
 # Go to LinkedIn and login with username and password or cookies if we have already logged in
-scraper.add_login_functionality('https://www.linkedin.com/login', '#username', '#password', '', 'button[type="submit"]', 'linkedin')
+scraper.add_login_functionality('https://www.linkedin.com/login', '#username', '#password', '', 'button[type="submit"]', '.global-nav__me-photo.ember-view', 'linkedin')
 
 # Enter the first search term in the search bar
 search_input_selector = '.search-global-typeahead__input'
