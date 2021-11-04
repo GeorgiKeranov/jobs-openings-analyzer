@@ -1,7 +1,7 @@
-from indeed_jobs import get_indeed_jobs_by_search_terms
-from linkedin_jobs_on_site import get_on_site_linkedin_jobs_by_search_terms
-from linkedin_jobs_remote import get_remote_linkedin_jobs_by_search_terms
-from visualize_data import visualize_data_in_pie_chart
+from scrapers.indeed_jobs import get_indeed_jobs_by_search_terms
+from scrapers.linkedin_jobs_on_site import get_on_site_linkedin_jobs_by_search_terms
+from scrapers.linkedin_jobs_remote import get_remote_linkedin_jobs_by_search_terms
+from helpers.visualize_data import visualize_data_in_pie_chart
 
 # Here you can change the search terms to the things you want
 # to analyze like for example progamming languages, frameworks, etc.

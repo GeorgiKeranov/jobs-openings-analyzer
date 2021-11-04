@@ -3,7 +3,7 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
-def get_on_site_linkedin_jobs_by_search_terms(jobs_search_terms)
+def get_on_site_linkedin_jobs_by_search_terms(jobs_search_terms):
 	# Here we will save the jobs count for every search term
 	jobs_found_results = []
 

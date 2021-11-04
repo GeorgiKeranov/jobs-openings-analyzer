@@ -3,7 +3,7 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
-def get_indeed_jobs_by_search_terms(jobs_search_terms, on_site_or_remote_jobs = 'on-site')
+def get_indeed_jobs_by_search_terms(jobs_search_terms, on_site_or_remote_jobs = 'on-site'):
 	# Here we will save the jobs count for every search term
 	jobs_found_results = [];
 

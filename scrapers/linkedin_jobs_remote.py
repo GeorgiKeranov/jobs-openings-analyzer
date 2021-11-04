@@ -1,8 +1,8 @@
 import time
-from scraper import Scraper
+from helpers.scraper import Scraper
 from selenium.webdriver.common.keys import Keys
 
-def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms)
+def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 	jobs_found_results = []
 
 	# Initialize the scraper for linkedin
