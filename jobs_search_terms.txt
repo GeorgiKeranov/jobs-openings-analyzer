@@ -6,5 +6,4 @@ C++ Developer
 C Developer
 PHP Developer
 Ruby Developer
-Golang Developer
 Swift Developer
