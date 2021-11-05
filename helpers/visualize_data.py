@@ -19,8 +19,8 @@ def visualize_data_in_grouped_bar_chart(labels, on_site_jobs_count, remote_jobs_
 	rects2 = ax.bar(labels_indexes + bars_width/2, remote_jobs_count, bars_width, label='Worldwide Remote Jobs')
 
 	# Add some text for labels, title and custom x-axis tick labels, etc.
-	ax.set_ylabel(chart_title)
-	ax.set_title('Job Openings')
+	ax.set_ylabel('Job Openings')
+	ax.set_title(chart_title)
 	ax.set_xticks(labels_indexes)
 	ax.set_xticklabels(labels)
 	ax.legend()
