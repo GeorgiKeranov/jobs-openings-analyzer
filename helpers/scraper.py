@@ -11,9 +11,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class Scraper:
-	# Here we will save all references of the html elements that we have found
-	selenium_elements = {}
-
 	# This delay is used when we are waiting for element to get loaded in the html
 	find_element_delay = 20
 
@@ -23,11 +20,8 @@ class Scraper:
 		self.setup_driver_options()
 		self.setup_driver()
 
-	# Automatically save cookies and close driver on destruction of the object
+	# Automatically close driver on destruction of the object
 	def __del__(self):
-		if hasattr(self, 'cookies_file_path'):	
-			self.save_cookies()
-
 		self.driver.close()
 
 	# Add these options in order to make chrome driver appear as a human instead of detecting it as a bot
@@ -72,6 +66,7 @@ class Scraper:
 		if not self.find_element(is_logged_in_selector, False, 5):
 			self.login()
 
+		print("\nLogin is successful!")
 
 	# Load cookies from file
 	def load_cookies(self):
@@ -95,6 +90,9 @@ class Scraper:
 
 	# Save cookies to file
 	def save_cookies(self):
+		if not hasattr(self, 'cookies_file_path'):
+			return
+
 		# Open or create cookies file with the given name from 'add_login_functionality'
 		cookies_file = open(self.cookies_file_path, 'wb')
 		
@@ -132,6 +130,7 @@ class Scraper:
 
 		# Login is not successful so call the function again
 		if not self.find_element(self.is_logged_in_selector, False, 5):
+			print("\nWrong credentials, please check your username and password then try again!")
 			self.login(False)
 
 		# Login is successful so save the cookies
@@ -152,10 +151,6 @@ class Scraper:
 		self.driver.get(page)
 
 	def find_element(self, selector, exit_on_missing_element = True, custom_find_element_delay = False):
-		# Check if we already have found this element and return the element
-		if selector in self.selenium_elements.keys():
-			return self.selenium_elements[selector]
-
 		# Initialize wait dealy
 		wait_delay = self.find_element_delay
 		if custom_find_element_delay:
@@ -173,12 +168,7 @@ class Scraper:
 				# End the program execution because we cannot find the element
 				exit()
 			else:
-				print(f'LOG: Timed out waiting for the element with css selector "{selector}" to load')
 				return False
-		
-		# Add this element in the global dictionary so if we need it multiple times
-		# we will not have to search for it in the html
-		self.selenium_elements[selector] = element
 
 		return element
 
