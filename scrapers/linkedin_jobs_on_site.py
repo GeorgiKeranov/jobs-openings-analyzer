@@ -33,7 +33,7 @@ def get_on_site_linkedin_jobs_by_search_terms(jobs_search_terms):
 
 		jobs_found_results.append(jobs_count)
 
-		# Create the next request after 2 seconds in order to not be detected as a bot
-		time.sleep(2)
+		# Create the next request after 3 seconds in order to not be detected as a bot
+		time.sleep(3)
 
 	return jobs_found_results
