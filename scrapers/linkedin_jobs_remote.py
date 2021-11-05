@@ -58,4 +58,6 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 		jobs_found_number = int(jobs_found_text.replace(',', ''))
 		jobs_found_results.append(jobs_found_number)
 
+	scraper.save_cookies()
+
 	return jobs_found_results
