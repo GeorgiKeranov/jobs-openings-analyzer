@@ -139,7 +139,7 @@ class Scraper:
 
 	# Wait random amount of seconds before taking some action so the server won't be able to tell if you are a bot
 	def wait_random_time(self):
-		random_sleep_seconds = round(random.uniform(1.00, 4.00), 2)
+		random_sleep_seconds = round(random.uniform(2.00, 4.00), 2)
 
 		time.sleep(random_sleep_seconds)
 
@@ -162,7 +162,7 @@ class Scraper:
 			wait_delay = custom_find_element_delay
 
 		# Intialize the condition to wait
-		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+		wait_until = EC.element_to_be_clickable((By.CSS_SELECTOR, selector))
 
 		try:
 			# Wait for element to load
