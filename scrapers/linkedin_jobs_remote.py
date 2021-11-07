@@ -9,7 +9,7 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 	scraper = Scraper('https://www.linkedin.com')
 
 	# Explain in the console why we are asking for the username and password in LinkedIn
-	print('\nThe count of remote jobs in LinkedIn can only be scraped by logged in user so please enter your credentials in the console. Note that when you are typing your username or password in the console they will not be visible so when you write them click Enter.\n\nIf you have already loged in we will use the cookies from cookies_files folder in this project so you won\'t have to log in again.\n')
+	print('\nThe count of remote jobs in LinkedIn can only be scraped by logged in users so please enter your credentials in the console. Note that when you are typing your username or password in the console they will not be visible so when you write them click Enter.\n\nIf you have already logged in we will use the cookies from the "cookies/" folder in this project so you won\'t have to log in again.\n')
 
 	# Go to LinkedIn and login with username and password or cookies if we have already logged in
 	scraper.add_login_functionality('https://www.linkedin.com/login', '#username', '#password', '', 'button[type="submit"]', '.global-nav__me-photo.ember-view', 'linkedin')
