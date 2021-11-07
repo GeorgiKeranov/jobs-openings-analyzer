@@ -33,13 +33,20 @@ def get_indeed_jobs_by_search_terms(jobs_search_terms, on_site_or_remote_jobs):
 		soup = BeautifulSoup(html, "html.parser")
 
 		# Search for <div id="searchCountPages"></div> and get the text in it
-		jobs_count_text = soup.find("div", {"id" : "searchCountPages"}).text
+		jobs_count_element = soup.find("div", {"id" : "searchCountPages"})
 		
-		# We have this text now "Page 1 of 2,358 jobs" and we are converting it to "2,358"
-		jobs_count_text = ((jobs_count_text.split("of "))[1]).split(" jobs")[0]
+		# HTML element found
+		if jobs_count_element is not None:
+			jobs_count_text = jobs_count_element.text
 
-		# We have this text now "2,358" so we convert it to "2358" and integer
-		jobs_count = int(jobs_count_text.replace(",", ""))
+			# We have this text now "Page 1 of 2,358 jobs" and we are converting it to "2,358"
+			jobs_count_text = ((jobs_count_text.split("of "))[1]).split(" jobs")[0]
+
+			# We have this text now "2,358" so we convert it to "2358" and integer
+			jobs_count = int(jobs_count_text.replace(",", ""))
+		# HTML element not found
+		else:
+			jobs_count = 0
 
 		jobs_found_results.append(jobs_count);
 
