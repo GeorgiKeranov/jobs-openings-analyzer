@@ -7,6 +7,10 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 
 	# Initialize the scraper for linkedin
 	scraper = Scraper('https://www.linkedin.com')
+
+	# Explain in the console why we are asking for the username and password in LinkedIn
+	print('\nThe count of remote jobs in LinkedIn can only be scraped by logged in user so please enter your credentials in the console. Note that when you are typing your username or password in the console they will not be visible so when you write them click Enter.\n\nIf you have already loged in we will use the cookies from cookies_files folder in this project so you won\'t have to log in again.\n')
+
 	# Go to LinkedIn and login with username and password or cookies if we have already logged in
 	scraper.add_login_functionality('https://www.linkedin.com/login', '#username', '#password', '', 'button[type="submit"]', '.global-nav__me-photo.ember-view', 'linkedin')
 
@@ -34,10 +38,16 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 	# Wait until the new jobs count is loaded
 	time.sleep(5)
 
-	# Get number of jobs found
-	jobs_found = scraper.find_element('.jobs-search-results-list__title-heading small')
-	jobs_found_text = (jobs_found.text).split(' ')[0]
-	jobs_found_number = int(jobs_found_text.replace(',', ''))
+	# Get HTML elment for number of jobs found
+	jobs_found_element = scraper.find_element('.jobs-search-results-list__title-heading small', False, 10)
+
+	# HTML element is found
+	if jobs_found_element:
+		jobs_found_text = (jobs_found_element.text).split(' ')[0]
+		jobs_found_number = int(jobs_found_text.replace(',', ''))
+	# HTML element is not found
+	else:
+		jobs_found_number = 0
 
 	jobs_found_results.append(jobs_found_number)
 
@@ -53,9 +63,17 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 		# Wait until the new jobs count is loaded
 		time.sleep(5)
 
-		# Get number of jobs found
-		jobs_found_text = (jobs_found.text).split(' ')[0]
-		jobs_found_number = int(jobs_found_text.replace(',', ''))
+		# Get HTML elment for number of jobs found
+		jobs_found_element = scraper.find_element('.jobs-search-results-list__title-heading small', False, 10)
+
+		# HTML element is found
+		if jobs_found_element:
+			jobs_found_text = (jobs_found_element.text).split(' ')[0]
+			jobs_found_number = int(jobs_found_text.replace(',', ''))
+		# HTML element is not found
+		else:
+			jobs_found_number = 0
+
 		jobs_found_results.append(jobs_found_number)
 
 	scraper.save_cookies()

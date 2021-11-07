@@ -26,27 +26,36 @@ def get_indeed_jobs_by_search_terms(jobs_search_terms, on_site_or_remote_jobs):
 		url_specific = url + urllib.parse.quote(search_term);
 
 		# Create get request with the search term
-		page = urlopen(url_specific)
-		html = page.read().decode("utf-8")
-
+		try:
+			# Page is found
+			page = urlopen(url_specific)
+		except:
+			# Page is not found
+			print('Page not found, please check the URL - ' + url_specific)
+			jobs_found_results.append(0)
+			continue
+		
 		# Create BeatifulSoup object to get html data easier from the html response
+		html = page.read().decode("utf-8")
 		soup = BeautifulSoup(html, "html.parser")
 
 		# Search for <div id="searchCountPages"></div> and get the text in it
 		jobs_count_element = soup.find("div", {"id" : "searchCountPages"})
 		
-		# HTML element found
-		if jobs_count_element is not None:
-			jobs_count_text = jobs_count_element.text
-
-			# We have this text now "Page 1 of 2,358 jobs" and we are converting it to "2,358"
-			jobs_count_text = ((jobs_count_text.split("of "))[1]).split(" jobs")[0]
-
-			# We have this text now "2,358" so we convert it to "2358" and integer
-			jobs_count = int(jobs_count_text.replace(",", ""))
 		# HTML element not found
-		else:
-			jobs_count = 0
+		if jobs_count_element is None:
+			jobs_found_results.append(0)
+			time.sleep(2)
+			continue
+	
+		# Get the text from the HTML element
+		jobs_count_text = jobs_count_element.text
+
+		# We have this text now "Page 1 of 2,358 jobs" and we are converting it to "2,358"
+		jobs_count_text = ((jobs_count_text.split("of "))[1]).split(" jobs")[0]
+
+		# We have this text now "2,358" so we convert it to "2358" and integer
+		jobs_count = int(jobs_count_text.replace(",", ""))
 
 		jobs_found_results.append(jobs_count);
 

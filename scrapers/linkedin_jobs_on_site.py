@@ -16,14 +16,30 @@ def get_on_site_linkedin_jobs_by_search_terms(jobs_search_terms):
 		url_specific = url + urllib.parse.quote(search_term)
 		
 		# Create get request with the search term
-		page = urlopen(url_specific)
-		html = page.read().decode("utf-8")
+		try:
+			# Page is found
+			page = urlopen(url_specific)
+		except:
+			# Page is not found
+			print('Page not found, please check the URL - ' + url_specific)
+			jobs_found_results.append(0)
+			continue
 
 		# Create BeatifulSoup object to get html data easier from the html response
+		html = page.read().decode("utf-8")
 		soup = BeautifulSoup(html, "html.parser")
 
-		# Search for <label for="f_TRP-3"></label> and get the text in it
-		jobs_count_text = soup.find("label", {"for" : "f_TPR-3"}).text
+		# Search for <label for="f_TRP-3"></label>
+		jobs_count_element = soup.find("label", {"for" : "f_TPR-3"})
+
+		# HTML element is not found
+		if jobs_count_element is None:
+			jobs_found_results.append(0)
+			time.sleep(3)
+			continue
+
+		# Get the text from the HTML element
+		jobs_count_text = jobs_count_element.text
 
 		# We have this text now "Any Time (143,727)" and we are converting it to "143,727"
 		jobs_count_text = ((jobs_count_text.split("("))[1]).split(")")[0]
