@@ -58,7 +58,7 @@ class Scraper:
 		self.remember_checkbox_selector = remember_checkbox_selector
 		self.login_button_selector = login_button_selector
 		self.is_logged_in_selector = is_logged_in_selector
-		self.cookies_file_path = 'cookies_files/' + cookies_file_name + '.pkl'
+		self.cookies_file_path = 'cookies_files' + os.path.sep + cookies_file_name + '.pkl'
 
 		self.load_cookies()
 
