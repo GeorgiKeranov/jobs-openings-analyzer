@@ -14,6 +14,9 @@ class Scraper:
 	# This delay is used when we are waiting for element to get loaded in the html
 	find_element_delay = 20
 
+	# In this folder we will save cookies from logged in users
+	cookies_folder = 'cookies' + os.path.sep
+
 	def __init__(self, url):
 		self.url = url
 
@@ -58,7 +61,8 @@ class Scraper:
 		self.remember_checkbox_selector = remember_checkbox_selector
 		self.login_button_selector = login_button_selector
 		self.is_logged_in_selector = is_logged_in_selector
-		self.cookies_file_path = 'cookies_files' + os.path.sep + cookies_file_name + '.pkl'
+		self.cookies_file_name = cookies_file_name + '.pkl'
+		self.cookies_file_path = self.cookies_folder + self.cookies_file_name
 
 		self.load_cookies()
 
@@ -70,12 +74,12 @@ class Scraper:
 
 	# Load cookies from file
 	def load_cookies(self):
-		# If there is no file with cookies go to the login page and ask for credentials
-		if not os.path.isfile(self.cookies_file_path):
+		# If there is no file or folder with cookies go to the login page and ask for credentials
+		if not os.path.exists(self.cookies_file_path):
 			self.login()
 			return
 		
-		# Load cookies from the given file name in 'add_login_functionality' function
+		# Load cookies from the file
 		cookies_file = open(self.cookies_file_path, 'rb')
 		cookies = pickle.load(cookies_file)
 		
@@ -90,10 +94,15 @@ class Scraper:
 
 	# Save cookies to file
 	def save_cookies(self):
+		# Do not save cookies if there is no cookies_file name 
 		if not hasattr(self, 'cookies_file_path'):
 			return
 
-		# Open or create cookies file with the given name from 'add_login_functionality'
+		# Create folder for cookies if there is no folder in the project
+		if not os.path.exists(self.cookies_folder):
+			os.mkdir(self.cookies_folder)
+
+		# Open or create cookies file
 		cookies_file = open(self.cookies_file_path, 'wb')
 		
 		# Get current cookies from the driver
