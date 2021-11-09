@@ -4,16 +4,16 @@ from helpers.visualize_data import visualize_data_in_bar_chart
 from scrapers.indeed_jobs import get_indeed_jobs_by_search_terms
 from scrapers.linkedin_jobs import get_linkedin_jobs_by_search_terms
 
-# Get all jobs search terms in 'jobs_search_terms.txt' file and convert them into array
-jobs_search_terms = helper.get_search_terms_from_file('jobs_search_terms.txt')
-
 type_of_jobs_options = ['on_site', 'remote', 'both']
 type_of_jobs_selected = helper.get_console_option('Which type job jobs you want?', type_of_jobs_options)
 
 site_options = [ 'linkedin', 'indeed' ]
 site_selected = helper.get_console_option('Which site you want to get data from?', site_options)
 
-print('\nPlease wait, it may take a while to scrape all the data from the site')
+print('\nPlease wait, it may take a while to scrape all the data from the site\n')
+
+# Get all jobs search terms in 'jobs_search_terms.txt' file and convert them into array
+jobs_search_terms = helper.get_search_terms_from_file('jobs_search_terms.txt')
 
 chart_title = helper.generate_chart_title(site_selected, type_of_jobs_selected)
 
