@@ -19,11 +19,13 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 	jobs_button_selector = 'button[aria-label="Jobs"]'
 	scraper.element_click(jobs_button_selector)
 
+	time.sleep(3)
 	# Filter search results location to be WorldWide
 	location_input_selector = 'input[aria-label="City, state, or zip code"]'
 	scraper.element_clear(location_input_selector)
 	scraper.element_send_keys(location_input_selector, 'Worldwide' + Keys.ENTER)
 
+	time.sleep(3)
 	# Filter the jobs to only Remote ones
 	onsite_remote_button_selector = 'button[aria-label="On-site/Remote filter. Clicking this button displays all On-site/Remote filter options."]'
 	remote_jobs_label_selector = 'label[for="workplaceType-2"]'
