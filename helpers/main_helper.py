@@ -30,7 +30,7 @@ def generate_chart_title(site_selected, type_of_jobs_selected):
 	chart_title = 'Job Openings'
 
 	if type_of_jobs_selected != 'both':
-		chart_title = type_of_jobs_selected.capitalize() + ' ' + chart_title
+		chart_title = type_of_jobs_selected.replace('_', ' ').capitalize() + ' ' + chart_title
 
 	if site_selected != 'all':
 		chart_title += ' in ' + site_selected.capitalize()
