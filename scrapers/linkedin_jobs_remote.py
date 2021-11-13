@@ -56,8 +56,18 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 		if index == 0:
 			continue;
 
+		# Enter search term in the search bar
 		scraper.element_clear(search_input_jobs_selector)
-		scraper.element_send_keys(search_input_jobs_selector, search_term + Keys.ENTER)
+		scraper.element_send_keys(search_input_jobs_selector, search_term)
+
+		time.sleep(1)
+		scraper.element_send_keys(search_input_jobs_selector, Keys.ENTER)
+
+		time.sleep(3)
+		# Filter the jobs to only Remote ones
+		scraper.element_click(onsite_remote_button_selector)
+		scraper.element_click(remote_jobs_label_selector)
+		scraper.element_click(show_results_button_selector)
 
 		# Wait until the new jobs count is loaded
 		time.sleep(5)
