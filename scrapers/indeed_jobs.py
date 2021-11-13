@@ -3,21 +3,21 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
-def get_indeed_jobs_by_search_terms(jobs_search_terms, on_site_or_remote_jobs):
+def get_indeed_jobs_by_search_terms(jobs_search_terms, all_or_remote_jobs):
 	# Here we will save the jobs count for every search term
 	jobs_found_results = [];
 
 	# URL for the indeed jobs
 	url = "https://www.indeed.com/jobs?";
 
-	# Create different GET requests for 'on_site' and 'remote' job types
-	if on_site_or_remote_jobs == 'on_site':
+	# Create different GET requests for 'all' and 'remote' job types
+	if all_or_remote_jobs == 'all':
 		url += 'q='
-	elif on_site_or_remote_jobs == 'remote':
+	elif all_or_remote_jobs == 'remote':
 		# Filter only by the remote jobs
 		url += 'remotejob=032b3046-06a3-4876-8dfd-474eb5e7ed11&q='
 	else :
-		print('Bad input, please select either "on_site" or "remote" without the quotes! Exiting from the program!')
+		print('Bad input, please select either "all" or "remote" without the quotes! Exiting from the program!')
 		exit()
 
 	# Search by every search term

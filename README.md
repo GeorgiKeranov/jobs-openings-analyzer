@@ -17,7 +17,7 @@ Automate getting the number of job openings for multiple search terms in big job
 
 ## Functionalities
 - You can search with your own search keywords
-- You can search by worldwide on-site or remote jobs in these job boards - LinkedIn, Indeed
+- You can search by all worldwide or remote jobs in these job boards - LinkedIn, Indeed
 
 ## Installation
 1. You will need to have [Python](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installation/) installed
@@ -45,7 +45,7 @@ Automate getting the number of job openings for multiple search terms in big job
   ```
   python main.py
   ```
-4. The terminal will ask to select an option to search jobs - "on_site", "remote" or "both" so you have to type in the console one of these options and click enter
+4. The terminal will ask to select an option to search jobs - "all", "remote" or "both" so you have to type in the console one of these options and click enter
 5. The terminal will ask to select a site from which will be the data taken - "linkedin" or "indeed" so you need to type one of them and click enter
 6. (Optional) If you have choosen "remote" or "both" and "linkedin" you will be asked for LinkedIn username and password in the terminal because the remote jobs count can only be scraped from logged in user.
 

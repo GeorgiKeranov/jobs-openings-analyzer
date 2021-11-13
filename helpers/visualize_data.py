@@ -12,14 +12,14 @@ def visualize_data_in_pie_chart(labels, values):
 	# showing the plot
 	plt.show()
 
-def visualize_data_in_grouped_bar_chart(labels, on_site_jobs_count, remote_jobs_count, chart_title):
+def visualize_data_in_grouped_bar_chart(labels, all_jobs_count, remote_jobs_count, chart_title):
 	plt.style.use('seaborn')
 
 	labels_indexes = np.arange(len(labels))
 	bars_width = 0.40
 
 	fig, ax = plt.subplots()
-	rects1 = ax.bar(labels_indexes - bars_width/2, on_site_jobs_count, bars_width, label='Worldwide On-Site Jobs')
+	rects1 = ax.bar(labels_indexes - bars_width/2, all_jobs_count, bars_width, label='Worldwide Jobs')
 	rects2 = ax.bar(labels_indexes + bars_width/2, remote_jobs_count, bars_width, label='Worldwide Remote Jobs')
 
 	# Add some text for labels, title and custom x-axis tick labels, etc.
