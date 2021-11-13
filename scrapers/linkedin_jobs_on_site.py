@@ -8,7 +8,7 @@ def get_on_site_linkedin_jobs_by_search_terms(jobs_search_terms):
 	jobs_found_results = []
 
 	# URL for the LinkedIn jobs that are worldwide
-	url = "https://www.linkedin.com/jobs/search?location=Worldwide&geoId=92000000&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&keywords="
+	url = "https://www.linkedin.com/jobs/search?location=Worldwide&locationId=&geoId=92000000&f_TPR=&f_WT=1&position=1&pageNum=0&keywords="
 
 	# Search by every search term
 	for search_term in jobs_search_terms:
