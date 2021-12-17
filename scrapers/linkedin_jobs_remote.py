@@ -29,9 +29,12 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 	# Filter the jobs to only Remote ones
 	onsite_remote_button_selector = 'button[aria-label="On-site/Remote filter. Clicking this button displays all On-site/Remote filter options."]'
 	remote_jobs_label_selector = 'label[for="workplaceType-2"]'
-	show_results_button_selector = '.artdeco-hoverable-content--visible button[data-control-name="filter_show_results"]'
 	scraper.element_click(onsite_remote_button_selector)
 	scraper.element_click(remote_jobs_label_selector)
+
+	# Wait until button is loaded
+	time.sleep(5)
+	show_results_button_selector = '.artdeco-hoverable-content--visible button[data-control-name="filter_show_results"]'
 	scraper.element_click(show_results_button_selector)
 
 	# Wait until the new jobs count is loaded
