@@ -1,9 +1,8 @@
-Python Developer
-JavaScript Developer
-Java Developer
-C# Developer
-C++ Developer
-C Developer
-PHP Developer
-Ruby Developer
-Swift Developer
+Python
+JavaScript
+Java
+C#
+C++
+PHP
+Ruby
+Swift
