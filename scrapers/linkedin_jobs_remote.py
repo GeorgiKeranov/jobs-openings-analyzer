@@ -41,7 +41,7 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 	time.sleep(5)
 
 	# Get HTML elment for number of jobs found
-	jobs_found_element = scraper.find_element('.jobs-search-results-list__title-heading small', False, 10)
+	jobs_found_element = scraper.find_element('.jobs-search-results-list__header--blue small', False, 10)
 
 	# HTML element is found
 	if jobs_found_element:
@@ -57,7 +57,7 @@ def get_remote_linkedin_jobs_by_search_terms(jobs_search_terms):
 
 	for index, search_term in enumerate(jobs_search_terms):
 		if index == 0:
-			continue;
+			continue
 
 		# Enter search term in the search bar
 		scraper.element_clear(search_input_jobs_selector)
